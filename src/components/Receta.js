@@ -1,5 +1,5 @@
-import React,{useContext,useState} from 'react';
-import {ModalContext} from "../context/ModalContext";
+import React, { useContext, useState } from 'react';
+import { ModalContext } from '../context/ModalContext';
 
 import Modal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,28 +25,38 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
 const Receta = ({receta}) => {
 
-    //configuracion del modal de material-ui
-
-    const{modalStyle} = useState(getModalStyle);
-    const[open,setOpen] = useState(false);
+    // Configuración del modal de material-ui
+    const [ modalStyle ] = useState(getModalStyle);
+    const [open, setOpen] = useState(false);
 
     const classes = useStyles();
 
     const handleOpen = () => {
         setOpen(true);
     }
-
     const handleClose = () => {
         setOpen(false);
     }
 
-    const{idDrink,strDrink,strDrinkThumb} = receta;
 
-    //extraer los valores del context
-    const {informacion,guardarIdReceta,guardarReceta} = useContext(ModalContext);
+    // extraer los valores del context
+    const { informacion, guardarIdReceta, guardarReceta } = useContext(ModalContext);
+
+    // Muestra y formatea los ingredientes
+    const mostrarIngredientes = informacion => {
+        let ingredientes = [];
+        for(let i = 1; i < 16; i++){
+            if( informacion[`strIngredient${i}`] ) {
+                ingredientes.push(
+                    <li> { informacion[`strIngredient${i}`] }  { informacion[`strMeasure${i}`] }</li>
+                )
+            }
+        }
+
+        return ingredientes;
+    }
 
     return ( 
         <div className="col-md-4 mb-3">
@@ -67,7 +77,8 @@ const Receta = ({receta}) => {
                          Ver Receta
                      </button>
 
-                    <Modal
+
+                     <Modal
                         open={open}
                         onClose={() => {
                             guardarIdReceta(null);
@@ -85,12 +96,12 @@ const Receta = ({receta}) => {
                             <img className="img-fluid my-4" src={informacion.strDrinkThumb} />
 
                             <h3>Ingredientes y cantidades</h3>
-                            {/* <ul>
+                            <ul>
                                 { mostrarIngredientes(informacion) }
-                            </ul> */}
+                            </ul>
                          </div>
                      </Modal>
-                </div>
+                 </div>
             </div>
         </div>
      );
